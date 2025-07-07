@@ -1,147 +1,114 @@
 
-const Usuario = require("../models/aluno.model");
-const bcrypt =require('bcryptjs')
+const bcrypt = require("bcryptjs");
+const UsuarioModel = require("../models/usuarioModel");
 
 class UsuarioController {
   static async cadastrar(req, res) {
     try {
-      const { id, nome, marca, categoria, quantidade, preco_unitario } = req.body;
-      if (!nome|| !marca || !categoria || !quantidade || !preco_unitario) {
-        return res
-          .status(400)
-          .json({ msg: "Todos os campos devem serem preenchidos!" });
+      const { id, nome, senha } = req.body;
+
+      if (!id || !nome || !senha) {
+        return res.status(400).json({ msg: "Todos os campos (id, nome, senha) são obrigatórios." });
       }
-      // criptografando ID
-      const idCriptografada = await bcrypt.hash(id, 15);
-      await usuario.create({ nome, marca, categoria, quantidade, preco_unitario, id: idCriptografada });
-      res.status(200).json({ msg: 'Usuario criado com sucesso' });
+
+      const usuarioExistente = await UsuarioModel.findOne({ where: { id } });
+      if (usuarioExistente) {
+        return res.status(409).json({ msg: "Usuário com esse ID já existe!" });
+      }
+
+      const senhaHash = await bcrypt.hash(senha, 10);
+
+      await UsuarioModel.create({ id, nome, senha: senhaHash });
+
+      res.status(201).json({ msg: "Usuário criado com sucesso!" });
     } catch (error) {
-        res.status(500).json({msg: 'Erro do servidor. Tente novamente mais tarde!', erro: error.message})
+      res.status(500).json({ msg: "Erro ao criar usuário", erro: error.message });
     }
   }
-  static async perfil(req, res) {
-    try {
-      
-      const { id } = req.usuario; // vindo do token
 
-      // Busca mais dados se necessário
-      const usuario = await usuario.findOne({
-        where: { id },
-        attributes: ['nome', 'marca', 'categoria', 'quantidade', 'preco_unitario'], // apenas os campos públicos
-        //          { exclude: "id"} caso haja varias tabelas e relacionamentos
-      });
+  static async listarTodos(req, res) {
+    try {
+      const usuarios = await UsuarioModel.findAll({ attributes: { exclude: ['senha'] } });
+      res.status(200).json(usuarios);
+    } catch (error) {
+      res.status(500).json({ msg: "Erro ao listar usuários", erro: error.message });
+    }
+  }
+
+  static async listarPorId(req, res) {
+    try {
+      const { id } = req.params;
+      const usuario = await UsuarioModel.findByPk(id, { attributes: { exclude: ['senha'] } });
 
       if (!usuario) {
-        return res.status(404).json({ msg: "Usuario não encontrado." });
+        return res.status(404).json({ msg: "Usuário não encontrado." });
+      }
+
+      res.status(200).json(usuario);
+    } catch (error) {
+      res.status(500).json({ msg: "Erro ao buscar usuário", erro: error.message });
+    }
+  }
+
+  static async editar(req, res) {
+    try {
+      const { id } = req.params;
+      const { nome, senha } = req.body;
+
+      const usuario = await UsuarioModel.findByPk(id);
+      if (!usuario) {
+        return res.status(404).json({ msg: "Usuário não encontrado." });
+      }
+
+      const novaSenha = senha ? await bcrypt.hash(senha, 10) : usuario.senha;
+
+      await UsuarioModel.update({ nome, senha: novaSenha }, { where: { id } });
+
+      res.status(200).json({ msg: "Usuário atualizado com sucesso!" });
+    } catch (error) {
+      res.status(500).json({ msg: "Erro ao atualizar usuário", erro: error.message });
+    }
+  }
+
+  static async excluirPorId(req, res) {
+    try {
+      const { id } = req.params;
+
+      const usuario = await UsuarioModel.findByPk(id);
+      if (!usuario) {
+        return res.status(404).json({ msg: "Usuário não encontrado." });
+      }
+
+      await UsuarioModel.destroy({ where: { id } });
+
+      res.status(200).json({ msg: "Usuário excluído com sucesso!" });
+    } catch (error) {
+      res.status(500).json({ msg: "Erro ao excluir usuário", erro: error.message });
+    }
+  }
+
+  static async excluirTodos(req, res) {
+    try {
+      await UsuarioModel.destroy({ where: {} });
+      res.status(200).json({ msg: "Todos os usuários foram excluídos!" });
+    } catch (error) {
+      res.status(500).json({ msg: "Erro ao excluir todos os usuários", erro: error.message });
+    }
+  }
+
+  static async perfil(req, res) {
+    try {
+      const { id } = req.usuario; // vem do token (middleware)
+
+      const usuario = await UsuarioModel.findByPk(id, { attributes: { exclude: ['senha'] } });
+      if (!usuario) {
+        return res.status(404).json({ msg: "Perfil não encontrado" });
       }
 
       res.status(200).json({ perfil: usuario });
     } catch (error) {
-        res.status(500).json({
-          msg: "Erro ao buscar perfil.",
-          erro: error.message
-        });
-      }
+      res.status(500).json({ msg: "Erro ao obter perfil", erro: error.message });
     }
-      
-      static async criar(requisicao, resposta) {
-        try {
-          const { id, nome, marca, categoria, quantidade, preco_unitario } = requisicao.body;
-          if (!nome || !marca ||!categoria || !quantidade || !preco_unitario) {
-            return resposta
-              .status(400)
-              .json({ mensagem: "Todos os campos devem ser fornecidos!" });
-          }
-          const novoUsuario = await UsuarioModel.criar(id,  nome, marca, categoria, quantidade, preco_unitario);
-          resposta
-            .status(201)
-            .json({ mensagem: "Aluno criado com sucesso", usuario: novoUsuario });
-        } catch (error) {
-          resposta
-            .status(500)
-            .json({ mensagem: "Erro ao criar o usuario!", erro: error.message });
-        }
-      }
-      static async editar(requisicao, resposta) {
-        // http://localhost:3000/aluno/
-        try {
-          const id = requisicao.params.id;
-          const { nome, marca, categoria, quantidade, preco_unitario} = requisicao.body;
-          if (!nome || !marca || !categoria || !quantidade || !preco_unitario) {
-            return resposta
-              .status(400)
-              .json({ mensagem: "Todos os campos devem ser preenchidos!" });
-          }
-    
-          const usuario = await UsuarioModel.editar(id, nome, marca, categoria, quantidade, preco_unitario);
-          if (usuario.length === 0) {
-            return resposta.status(400).json({ mensagem: "Usuario não encontrado!" });
-          }
-          resposta.status(200).json({ mensagem: "Usuario editado com sucesso!", usuario: usuario });
-        } catch (error) {
-          resposta
-            .status(500)
-            .json({ mensagem: "Erro ao editar o usuario!", erro: error.message });
-        }
-      }
-      static async listarTodos(requisicao, resposta) {
-        try {
-          const usuario = await ModelUsuario.listar();
-          if (usuario.length === 0) {
-            return resposta
-              .status(400)
-              .json({ mensagem: "Não existe usuario a serem exibidos!" });
-          }
-          resposta.status(200).json(usuario);
-        } catch (error) {
-          resposta
-            .status(500)
-            .json({ mensagem: "Erro ao listar os usuario!", erro: error.message });
-        }
-      }
-      static async listarPorId(requisicao, resposta) {
-        try {
-          const id = requisicao.params.id;
-          const usuario = await |UsuarioModel.listarPorMatricula(usuario);
-          if (usuario.length === 0) {
-            return resposta.status(400).json({ mensagem: "Usuario não encontrado!" });
-          }
-          resposta.status(200).json(usuario);
-        } catch (error) {
-          resposta.status(500).json({
-            mensagem: "Erro ao listar por matricula o usuario!",
-            erro: error.message,
-          });
-        }
-      }
-      static async excluirTodos(requisicao, resposta) {
-        try {
-          debug("Rota raiz foi acessada!");
-          await UsuarioModel.excluirTodos();
-          resposta
-            .status(200)
-            .json({ mensagem: "Todos os usuario foram excluidos com sucesso!" });
-        } catch (error) {
-          resposta.status(500).json({
-            mensagem: "Erro ao excluir todos os usuario!",
-            erro: error.message,
-          });
-        }
-      }
-      static async excluirPorId(requisicao, resposta) {
-        try {
-          const id = requisicao.params.id;
-          const usuario = await UsuarioModel.listarPorId(id);
-          if (usuario.length === 0) {
-            return resposta.status(400).json({ mensagem: "Usuario não encontrado!" });
-          }
-          await UsuarioModel.excluirPorId(id);
-          resposta.status(200).json({ mensagem: "Usuario excluido com sucesso!" });
-        } catch (error) {
-          resposta
-            .status(500)
-            .json({ mensagem: "Erro ao excluir o usuario!", erro: error.message });
-            }
   }
 }
 

@@ -1,11 +1,26 @@
 {
-  "devDependencies": {
-    "nodemon": "^3.1.10"
+  "name": "gestao-estoque",
+  "version": "1.0.0",
+  "description": "Sistema de gestão de estoque com autenticação JWT",
+  "main": "server.js",
+  "scripts": {
+    "start": "node src/index.js",
+    "dev": "nodemon src/index.js"
   },
+  "author": "Seu Nome",
+  "license": "MIT",
   "dependencies": {
-    "mongoose": "^8.16.1",
+    "bcryptjs": "^2.4.3",
+    "cookie-parser": "^1.4.6",
+    "cors": "^2.8.5",
+    "dotenv": "^16.4.1",
+    "express": "^4.19.2",
+    "jsonwebtoken": "^9.0.2",
     "pg": "^8.16.3",
     "pg-hstore": "^2.3.4",
     "sequelize": "^6.37.7"
+  },
+  "devDependencies": {
+    "nodemon": "^3.1.10"
   }
 }
