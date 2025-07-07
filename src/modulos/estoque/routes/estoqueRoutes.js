@@ -1,16 +1,14 @@
-
 const express = require('express');
-const router = express.Router();
 const EstoqueController = require('../controllers/estoqueController');
-const autenticar = require('../../autenticacao/controllers/autenticacaoController');
+const AutenticacaoMiddleware = require('../../../middleware/autenticacaoMiddleware');
 
+const router = express.Router();
 // Todas as rotas são privadas
-router.use(autenticar);
 
-router.post('/', EstoqueController.criar);
-router.get('/', EstoqueController.listarTodos);
-router.get('/:id', EstoqueController.listarPorId);
-router.put('/:id', EstoqueController.atualizar);
-router.delete('/:id', EstoqueController.deletar);
+router.post('/criar', AutenticacaoMiddleware.autenticarToken, EstoqueController.criar);
+router.get('/', AutenticacaoMiddleware.autenticarToken, EstoqueController.listarTodos);
+router.get('/:id',AutenticacaoMiddleware.autenticarToken, EstoqueController.listarPorId);
+router.put('/:id',AutenticacaoMiddleware.autenticarToken, EstoqueController.atualizar);
+router.delete('/:id',AutenticacaoMiddleware.autenticarToken, EstoqueController.deletar);
 
 module.exports = router;

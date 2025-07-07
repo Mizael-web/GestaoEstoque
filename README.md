@@ -71,4 +71,6 @@ npm install express dotenv cookie-parser bcryptjs jsonwebtoken pg pg-hstore sequ
 
 npm start
 
+http://localhost:3001/api/usuario/cadastrar
+
 

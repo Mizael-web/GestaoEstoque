@@ -1,24 +1,26 @@
 const jwt = require('jsonwebtoken');
 
-function autenticarToken(req, res, next) {
-  const authHeader = req.headers.authorization;
 
-  if (!authHeader) {
-    return res.status(401).json({ msg: 'Token não fornecido' });
-  }
-  const token = authHeader.split(' ')[1]; // Espera formato "Bearer TOKEN"
+class AutenticacaoMiddleware {
+  static autenticarToken(req, res, next) {
+    const authHeader = req.headers.authorization;
 
-  if (!token) {
-    return res.status(401).json({ msg: 'Token não fornecido' });
-  }
+    if (!authHeader) {
+      return res.status(401).json({ msg: 'Token não fornecido' });
+    }
+    const token = authHeader.split(' ')[1]; // Espera formato "Bearer TOKEN"
 
-  try {
-    const decoded = jwt.verify(token, process.env.SECRET_KEY);
-    req.usuario = decoded; // dados do usuário ficam disponíveis no req.usuario
-    next();
-  } catch (err) {
-    return res.status(401).json({ msg: 'Token inválido' });
+    if (!token) {
+      return res.status(401).json({ msg: 'Token não fornecido' });
+    }
+
+    try {
+      const decoded = jwt.verify(token, process.env.SECRET_KEY);
+      req.usuario = decoded; // dados do usuário ficam disponíveis no req.usuario
+      next();
+    } catch (err) {
+      return res.status(401).json({ msg: 'Token inválido' });
+    }
   }
 }
-
-module.exports = autenticarToken;
+module.exports = AutenticacaoMiddleware;

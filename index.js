@@ -4,11 +4,11 @@ const dotenv = require('dotenv');
 const cors = require('cors');
 const cookieParser = require('cookie-parser');
 
-const { sequelize } = require('./config/configDb');
+const { sequelize } = require('./src/config/configDb');
 
-const autenticacaoRoutes = require('./modulos/autenticacao/routes/autenticacaoRoutes');
-const usuarioRoutes = require('./modulos/usuario/routes/usuarioRoutes');
-const estoqueRoutes = require('./modulos/estoque/routes/estoqueRoutes');
+const autenticacaoRoutes = require('./src/modulos/autenticacao/routes/autenticacaoRoutes');
+const usuarioRoutes = require('./src/modulos/usuario/routes/usuarioRoutes');
+const estoqueRoutes = require('./src/modulos/estoque/routes/estoqueRoutes');
 
 dotenv.config();
 
@@ -23,11 +23,12 @@ app.use(express.json());
 app.use(cookieParser());
 
 // ✅ Importando rotas
-const authRoute = require('./modulos/autenticacao/routes/autenticacaoRoutes');
+const authRoute = require('./src/modulos/autenticacao/routes/autenticacaoRoutes');
 
 // ✅ Usando a rota
 app.use('/api', authRoute);
 
+console.log(process.env.DB_PASSWORD)
 
 // Rotas
 app.use('/api/auth', autenticacaoRoutes);

@@ -1,6 +1,3 @@
-
-// modulos/estoque/models/estoqueModel.js
-
 const { DataTypes } = require("sequelize");
 const { sequelize } = require("../../../config/configDb");
 
@@ -8,13 +5,8 @@ const Estoque = sequelize.define("Estoque", {
   id: {
     type: DataTypes.STRING,
     primaryKey: true,
+    autoIncrement: true,
     allowNull: false,
-    validate: {
-      is: {
-        args: /^[A-Za-z]\d{5}$/,
-        msg: "O Id deve iniciar com uma letra e ter 5 números!",
-      },
-    },
   },
   nome: {
     type: DataTypes.STRING,

@@ -1,6 +1,6 @@
 const express = require("express");
 const UsuarioController = require("../controllers/usuarioController");
-const autenticarToken = require("../../../middleware/autenticacaoMiddleware");
+const AutenticacaoMiddleware = require("../../../middleware/autenticacaoMiddleware");
 
 const router = express.Router();
 
@@ -10,10 +10,10 @@ router.get("/listar", UsuarioController.listarTodos);
 router.get("/listar/:id", UsuarioController.listarPorId);
 
 // Rotas protegidas (exigem autenticação)
-router.put("/atualizar/:id", autenticarToken, UsuarioController.editar);
-router.delete("/deletar/:id", autenticarToken, UsuarioController.excluirPorId);
-router.delete("/deletar-todos", autenticarToken, UsuarioController.excluirTodos);
+router.put("/atualizar/:id", AutenticacaoMiddleware.autenticarToken, UsuarioController.editar);
+router.delete("/deletar/:id", AutenticacaoMiddleware.autenticarToken, UsuarioController.excluirPorId);
+router.delete("/deletar-todos", AutenticacaoMiddleware.autenticarToken, UsuarioController.excluirTodos);
 
-router.get("/perfil", autenticarToken, UsuarioController.perfil);
+router.get("/perfil", AutenticacaoMiddleware.autenticarToken, UsuarioController.perfil);
 
 module.exports = router;
