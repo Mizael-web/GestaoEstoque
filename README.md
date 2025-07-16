@@ -74,3 +74,40 @@ npm start
 http://localhost:3001/api/usuario/cadastrar
 
 
+--------------------------
+revisão da atividade:
+
+primeiro se começa pelas regra de negocio.
+models é diferente de modulos
+modules/modulos: estoque/usuario/estoque;
+e 3 model em cada modulos, ex: estoqueController.js; estoqueRoutes.js; estoqueModel.js                               
+modulos: cada modulo ter: controllers/models/routes
+
+
+modulos/
+├── estoque/
+│   ├── controller/
+│   │   └── estoque.controller.js
+│   ├── router/
+│   │   └── estoque.route.js
+│   └── models/
+│       └── estoque.model.js
+Ou separado:
+
+
+models/
+  └── estoqueModel.js
+
+modulos/
+  └── estoque/
+      ├── estoque.controller.js
+      ├── estoque.route.js
+
+
+
+No usuario so precisava de criar e perfil. para poder logar 
+o middleware fica entre o usuario e o autenticar
+No estoque que precisava fazer o crud
+sempre criar .envexample para ter como exemplo para fazer o .env
+
+

@@ -3,10 +3,9 @@ const { sequelize } = require("../../../config/configDb");
 
 const Estoque = sequelize.define("Estoque", {
   id: {
-    type: DataTypes.STRING,
+    type: DataTypes.INTEGER,
     primaryKey: true,
     autoIncrement: true,
-    allowNull: false,
   },
   nome: {
     type: DataTypes.STRING,

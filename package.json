@@ -2,7 +2,7 @@
   "name": "gestao-estoque",
   "version": "1.0.0",
   "description": "Sistema de gestão de estoque com autenticação JWT",
-  "main": "server.js",
+  "main": "index.js",
   "scripts": {
     "start": "node src/index.js",
     "dev": "nodemon src/index.js"

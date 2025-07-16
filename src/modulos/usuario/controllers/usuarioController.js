@@ -5,9 +5,9 @@ const UsuarioModel = require("../models/usuarioModel");
 class UsuarioController {
   static async cadastrar(req, res) {
     try {
-      const { id, nome, senha } = req.body;
+      const { id, nome, papel, email, senha } = req.body;
 
-      if (!id || !nome || !senha) {
+      if (!id || !nome || ! papel ||!email || !senha) {
         return res.status(400).json({ msg: "Todos os campos (id, nome, senha) são obrigatórios." });
       }
 
@@ -18,7 +18,7 @@ class UsuarioController {
 
       const senhaHash = await bcrypt.hash(senha, 10);
 
-      await UsuarioModel.create({ id, nome, senha: senhaHash });
+      await UsuarioModel.create({ id, nome, papel, email,  senha: senhaHash });
 
       res.status(201).json({ msg: "Usuário criado com sucesso!" });
     } catch (error) {

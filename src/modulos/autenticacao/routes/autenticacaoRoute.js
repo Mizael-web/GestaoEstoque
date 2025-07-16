@@ -2,9 +2,7 @@
 const express = require('express');
 const router = express.Router();
 
-const AutenticacaoController = require('../controllers/autenticacaoController')
-
-
+const AutenticacaoController = require('../../autenticacao/controllers/autenticacaoController');
 
 // rota publica de login
 router.post('/login', AutenticacaoController.login);
