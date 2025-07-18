@@ -10,6 +10,7 @@ const sequelize = new Sequelize(
     host: process.env.DB_HOST,
     port: Number(process.env.DB_PORT) || 5432,
     dialect: 'postgres',
+<<<<<<< HEAD
     logging: false, // Altere para true se quiser ver as queries no console
     dialectOptions: {
       ssl: process.env.DB_SSL === 'true' ? { require: true, rejectUnauthorized: false } : false,
@@ -27,4 +28,10 @@ const sequelize = new Sequelize(
   }
 })();
 
+=======
+    logging: true, // opcional
+  }
+);
+
+>>>>>>> 859f562fd4d0bc56ae2e4a681a70bf0f7fe540f5
 module.exports = { sequelize };

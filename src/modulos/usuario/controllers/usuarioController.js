@@ -6,10 +6,17 @@ const Usuario = require("../../../modulos/usuario/models/usuarioModel");
 class UsuarioController {
   static async cadastrar(req, res) {
     try {
+<<<<<<< HEAD
       const { nome, email, senha, papel } = req.body;
 
       if (!nome || !email || !senha || !papel) {
         return res.status(400).json({ msg: "Todos os campos são obrigatórios." });
+=======
+      const { id, nome, papel, email, senha } = req.body;
+
+      if (!id || !nome || ! papel ||!email || !senha) {
+        return res.status(400).json({ msg: "Todos os campos (id, nome, senha) são obrigatórios." });
+>>>>>>> 859f562fd4d0bc56ae2e4a681a70bf0f7fe540f5
       }
 
       if (!["admin", "funcionario"].includes(papel.toLowerCase())) {
@@ -18,12 +25,16 @@ class UsuarioController {
 
       const senhaHash = await bcrypt.hash(senha, 10);
 
+<<<<<<< HEAD
       const novoUsuario = await Usuario.create({
         nome,
         email,
         senha: senhaHash,
         papel: papel.toLowerCase(),
       });
+=======
+      await UsuarioModel.create({ id, nome, papel, email,  senha: senhaHash });
+>>>>>>> 859f562fd4d0bc56ae2e4a681a70bf0f7fe540f5
 
       return res.status(201).json({ msg: "Usuário criado com sucesso!", usuario: novoUsuario });
     } catch (erro) {

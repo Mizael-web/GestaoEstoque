@@ -10,6 +10,7 @@ const CategoriaModel = sequelize.define('Categoria', {
   },
   nome: {
     type: DataTypes.STRING,
+<<<<<<< HEAD
     allowNull: false,
     validate: {
       notEmpty: {
@@ -21,10 +22,16 @@ const CategoriaModel = sequelize.define('Categoria', {
       }
     }
   },
+=======
+    allowNull: false
+  },
+
+>>>>>>> 859f562fd4d0bc56ae2e4a681a70bf0f7fe540f5
   descricao: {
     type: DataTypes.STRING,
     allowNull: false,
     validate: {
+<<<<<<< HEAD
       notEmpty: {
         msg: 'A descrição é obrigatória.'
       },
@@ -42,3 +49,20 @@ const CategoriaModel = sequelize.define('Categoria', {
 });
 
 module.exports = CategoriaModel;
+=======
+      len: {
+        args: [10, 255],
+        msg: "A descrição deve ter entre 10 e 255 caracteres."
+      }
+    }
+}
+},
+  {
+    tableName: "categoria",
+    createdAt: "criado_em",
+    updatedAt: "atualizado_em",
+  }
+);
+
+module.exports = CategoriaModel;
+>>>>>>> 859f562fd4d0bc56ae2e4a681a70bf0f7fe540f5
